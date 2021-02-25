@@ -38,7 +38,7 @@ class Sentiment(sentiment_pb2_grpc.SentimentServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     sentiment_pb2_grpc.add_SentimentServicer_to_server(Sentiment(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
