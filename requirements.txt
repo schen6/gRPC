@@ -1,0 +1,6 @@
+torch==1.0.1.post2
+pytorch_pretrained_bert==0.6.2
+lightgbm==2.2.3
+regex==2019.6.8
+grpcio==1.35.0
+grpcio-tools==1.35.0

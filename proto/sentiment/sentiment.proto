@@ -1,0 +1,11 @@
+syntax = "proto3";
+package sentiment;
+
+message TextInput { string text = 1; }
+
+message Results { string result = 1; }
+
+service Sentiment {
+  // Sends a greeting
+  rpc GetSentiment(TextInput) returns (Results) {}
+}
