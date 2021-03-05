@@ -13,6 +13,8 @@ class Config():
         self.log_path = cfp.get('log', 'path')
         self.model_path = cfp.get('model', 'path')
 
+        self.zhihu_cookie = cfp.get('zhihu', 'cookie')
+
 
 if __name__ == '__main__':
     print(root_path)
