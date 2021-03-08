@@ -2,6 +2,7 @@ import random
 import re
 import requests
 import time
+import sys
 from Logger import log
 
 
@@ -276,7 +277,7 @@ class ZhihuClient(object):
         log('ZhihuClient.searchAnswer').logger.info(
             'start to get page: %s, data: %s' % (page + 1, len(results)))
         url = self.__base_answer_url.format(question_id, offset)
-        res = self.__getData(url)
+        res = self.__getDataV2(url)
         if res is None:
             return results, 400
         datas, paging = res[0], res[1]
