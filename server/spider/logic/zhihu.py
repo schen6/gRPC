@@ -83,9 +83,15 @@ class ZhihuClient(object):
         datas = html.get('data')
         if datas is None:
             return None
-        if len(datas) == 0:
-            return None
+        # if len(datas) == 0:
+        #     return None
         return datas
+
+    def __getJsonDataPaging(self, html):
+        paging = html.get('paging')
+        if paging is None:
+            return None
+        return paging
 
     def __getUserNextUrl(self, html):
         try:
@@ -106,7 +112,18 @@ class ZhihuClient(object):
         datas = self.__getJsonData(html)
         if datas is None:
             return None
+
         return datas
+
+    def __getDataV2(self, url):
+        html = self.__getResponseJson(url)
+        if html is None:
+            return None
+        datas = self.__getJsonData(html)
+        if datas is None:
+            return None
+        paging = self.__getJsonDataPaging(html)
+        return (datas, paging)
 
     def __getQuestionJsonData(self, datas):
         '''
@@ -227,11 +244,11 @@ class ZhihuClient(object):
         results = []
         page = page - 1
         offset = page * 20
-        datas = ['']
         url = base_url % offset
-        datas = self.__getData(url)
-        if datas is None:
+        res = self.__getDataV2(url)
+        if res is None:
             return results, 400
+        datas, paging = res[0], res[1]
         if not full_json:
             for data in self.__getQuestionJsonData(datas):
                 data_dict = self.__getQuestionDataDict(data)
@@ -244,7 +261,7 @@ class ZhihuClient(object):
         log('ZhihuClient.search').logger.info('search done')
         log('ZhihuClient.searchQuestion').logger.info(
             'start to get page: %s, data: %s' % (page + 1, len(results)))
-        return results, 200
+        return {'results': results, 'paging': paging}, 200
 
     def __searchAnswer(self, question_id, page=None):
         '''
@@ -256,18 +273,18 @@ class ZhihuClient(object):
         results = []
         page = page - 1
         offset = page * 5
-        datas = ['']
         log('ZhihuClient.searchAnswer').logger.info(
             'start to get page: %s, data: %s' % (page + 1, len(results)))
         url = self.__base_answer_url.format(question_id, offset)
-        datas = self.__getData(url)
-        if datas is None:
+        res = self.__getData(url)
+        if res is None:
             return results, 400
+        datas, paging = res[0], res[1]
         for data in self.__getAnswerJsonData(datas):
             data_dict = self.__getAnswerDataDict(data)
             results.append(data_dict)
         log('ZhihuClient.searchAnswer').logger.info('search done')
-        return results, 200
+        return {'results': results, 'paging': paging}, 200
 
     def __searchUser(self, user_id):
         '''
