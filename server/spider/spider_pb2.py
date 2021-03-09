@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0cspider.proto\x12\x06spider\"\x14\n\x04\x44\x61ta\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x19\n\x07Results\x12\x0e\n\x06result\x18\x01 \x01(\t22\n\x06Spider\x12(\n\x05Zhihu\x12\x0c.spider.Data\x1a\x0f.spider.Results\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0cspider.proto\x12\x06spider\"\x14\n\x04\x44\x61ta\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x19\n\x07Results\x12\x0e\n\x06result\x18\x01 \x01(\t2_\n\x06Spider\x12(\n\x05Zhihu\x12\x0c.spider.Data\x1a\x0f.spider.Results\"\x00\x12+\n\x08Kuaishou\x12\x0c.spider.Data\x1a\x0f.spider.Results\"\x00\x62\x06proto3'
 )
 
 
@@ -116,12 +116,22 @@ _SPIDER = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=73,
-  serialized_end=123,
+  serialized_end=168,
   methods=[
   _descriptor.MethodDescriptor(
     name='Zhihu',
     full_name='spider.Spider.Zhihu',
     index=0,
+    containing_service=None,
+    input_type=_DATA,
+    output_type=_RESULTS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='Kuaishou',
+    full_name='spider.Spider.Kuaishou',
+    index=1,
     containing_service=None,
     input_type=_DATA,
     output_type=_RESULTS,

@@ -16,10 +16,26 @@ def run():
     # of the code.
     with grpc.insecure_channel('127.0.0.1:50052') as channel:
         stub = spider_pd2_grpc.SpiderStub(channel)
-        data = {'type': 'question', 'page': 1, 'kw': '开学'}
+
+        # data = {'type': 'question', 'page': 1, 'kw': '开学'}
+        # data = json.dumps(data, ensure_ascii=False)
+        # response = stub.Zhihu(spider_pb2.Data(data=data))
+        # print("Spider client received: " + response.result)
+
+        cookie = ''
+        # data = {
+        #     'type': 'video',
+        #     'user_id': '3xssjbdgqd35xfi',
+        #     'cookie': cookie,
+        # }
+        data = {
+            'type': 'search',
+            'kw': '电竞',
+            'cookie': cookie,
+        }
         data = json.dumps(data, ensure_ascii=False)
-        response = stub.Zhihu(spider_pb2.Data(data=data))
-        print("Sentiment client received: " + response.result)
+        response = stub.Kuaishou(spider_pb2.Data(data=data))
+        print("Spider client received: " + response.result)
 
 
 if __name__ == '__main__':

@@ -13,9 +13,12 @@ import server.spider.spider_pb2_grpc as spider_pd2_grpc
 from Logger import log
 from conf.conf import Config
 from server.spider.logic.zhihu import ZhihuClient
+from server.spider.logic.kuaishou import KuaishouClientV2
 
 conf = Config()
 zh_client = ZhihuClient(cookie=conf.zhihu_cookie)
+
+ks_client = KuaishouClientV2()
 
 
 class Spider(spider_pd2_grpc.SpiderServicer):
@@ -72,6 +75,68 @@ class Spider(spider_pd2_grpc.SpiderServicer):
             msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
             log('Spider.Zhihu').logger.error(msg)
             return
+
+    def Kuaishou(self, request, content):
+        try:
+            data = request.data
+            data = json.loads(data)
+            cookie = data.get('cookie', None)
+            if cookie is None:
+                results = {
+                    'status_code': 400,
+                    'message': 'cookie can not be none'
+                }
+                return spider_pb2.Results(
+                    result=json.dumps(results, ensure_ascii=False))
+            t = data.get('type', None)
+            if t == 'video':
+                obj = data.get('user_id', None)
+            elif t == 'search':
+                obj = data.get('kw', None)
+            elif t == 'comment':
+                obj = data.get('video_id', None)
+            else:
+                obj = None
+            if obj is None:
+                results = {
+                    'status_code': 400,
+                    'message': 'obj can not be none'
+                }
+                return spider_pb2.Results(
+                    result=json.dumps(results, ensure_ascii=False))
+            pcursor = data.get('pcursor', None)
+            res, code = ks_client.getData(t=t,
+                                          obj=obj,
+                                          cookie=cookie,
+                                          pcursor=pcursor)
+            if code != 200:
+                if code == 404:
+                    results = {
+                        'status_code': code,
+                        'message': 'error in requests'
+                    }
+                    return spider_pb2.Results(
+                        result=json.dumps(results, ensure_ascii=False))
+                else:
+                    results = {
+                        'status_code': code,
+                        'message': 'error happened in code'
+                    }
+                    return spider_pb2.Results(
+                        result=json.dumps(results, ensure_ascii=False))
+            else:
+                results = {'status_code': code, 'message': '', 'data': res}
+                return spider_pb2.Results(
+                    result=json.dumps(results, ensure_ascii=False))
+        except Exception as e:
+            msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
+            log('Spider.Zhihu').logger.error(msg)
+            results = {
+                'status_code': 400,
+                'message': msg,
+            }
+            return spider_pb2.Results(
+                result=json.dumps(results, ensure_ascii=False))
 
 
 def serve():
