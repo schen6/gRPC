@@ -328,8 +328,8 @@ class KuaishouClientV2:
             if t not in ['video', 'search', 'comment']:
                 return None, 400
             type_dict = {
-                'video': (self.__user_video_json, 'principalId',
-                          self.__getUserVideoList),
+                'video':
+                (self.__user_video_json, 'userId', self.__getUserVideoList),
                 'search': (self.__search_video_json, 'keyword',
                            self.__getSearchVideoList),
                 'comment':
