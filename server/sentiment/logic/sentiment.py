@@ -23,7 +23,7 @@ bert.eval()
 for param in bert.parameters():
     param.requires_grad = False
 model = lgb.Booster(
-    model_file=os.path.join(conf.model_path, 'google_bert_base_lgb_large.txt'))
+    model_file=os.path.join(conf.model_path, 'google_bert_base_lgb_large_202202.txt'))
 log('texttools.getSentiment').logger.info('model ready')
 
 
